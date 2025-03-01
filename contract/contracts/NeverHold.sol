@@ -12,6 +12,27 @@ contract NeverHold is Ownable {
 
     enum AuctionType { ENGLISH, DUTCH, SEALED_BID, TIME_BASED, CHARITY }
 
+    struct AuctionParams {
+        string name;
+        AuctionType auctionType;
+        address tokenAddress;
+        uint256 startPrice;
+        uint256 minBidIncrement;
+        uint256 maxPrice;
+        uint256 endTime;
+        address rewardToken;
+        uint256 rewardTokenId;
+        uint256 rewardAmount;
+        bool isERC721;
+        bool isERC1155;
+        uint256 numWinners;
+        bool canCloseEarly;
+        bool isRWA;
+        string rwaTokenURI;
+        uint256 dutchPriceDecrement;
+        uint256 sealedBidRevealTime;
+    }
+
     struct Auction {
         address seller;
         string name;
@@ -76,41 +97,22 @@ contract NeverHold is Ownable {
         emit CommissionUpdated(_creationFee, _commissionPercent);
     }
 
-    function createAuction(
-        string memory _name,
-        AuctionType _auctionType,
-        address _tokenAddress,
-        uint256 _startPrice,
-        uint256 _minBidIncrement,
-        uint256 _maxPrice,
-        uint256 _endTime,
-        address _rewardToken,
-        uint256 _rewardTokenId,
-        uint256 _rewardAmount,
-        bool _isERC721,
-        bool _isERC1155,
-        uint256 _numWinners,
-        bool _canCloseEarly,
-        bool _isRWA,
-        string memory _rwaTokenURI,
-        uint256 _dutchPriceDecrement,
-        uint256 _sealedBidRevealTime
-    ) external payable {
+    function createAuction(AuctionParams memory params) external payable {
         require(msg.value >= creationFee, "Insufficient creation fee");
-        require(_startPrice > 0, "Start price must be greater than 0");
-        require(_endTime > block.timestamp, "End time must be in future");
-        require(_numWinners > 0, "Number of winners must be greater than 0");
-        if (_tokenAddress != address(0)) {
-            require(!_isERC721 && !_isERC1155, "Invalid token config");
+        require(params.startPrice > 0, "Start price must be greater than 0");
+        require(params.endTime > block.timestamp, "End time must be in future");
+        require(params.numWinners > 0, "Number of winners must be greater than 0");
+        if (params.tokenAddress != address(0)) {
+            require(!params.isERC721 && !params.isERC1155, "Invalid token config");
         }
-        if (_isRWA) {
-            require(bytes(_rwaTokenURI).length > 0, "RWA requires token URI");
+        if (params.isRWA) {
+            require(bytes(params.rwaTokenURI).length > 0, "RWA requires token URI");
         }
-        if (_auctionType == AuctionType.DUTCH) {
-            require(_dutchPriceDecrement > 0, "Dutch auction requires price decrement");
+        if (params.auctionType == AuctionType.DUTCH) {
+            require(params.dutchPriceDecrement > 0, "Dutch auction requires price decrement");
         }
-        if (_auctionType == AuctionType.SEALED_BID) {
-            require(_sealedBidRevealTime > block.timestamp && _sealedBidRevealTime < _endTime, "Invalid reveal time");
+        if (params.auctionType == AuctionType.SEALED_BID) {
+            require(params.sealedBidRevealTime > block.timestamp && params.sealedBidRevealTime < params.endTime, "Invalid reveal time");
         }
 
         auctionIdCounter++;
@@ -118,36 +120,37 @@ contract NeverHold is Ownable {
 
         Auction storage auction = auctions[auctionId];
         auction.seller = msg.sender;
-        auction.name = _name;
-        auction.auctionType = _auctionType;
-        auction.tokenAddress = _tokenAddress;
-        auction.startPrice = _startPrice;
-        auction.currentPrice = _startPrice;
-        auction.minBidIncrement = _minBidIncrement;
-        auction.maxPrice = _maxPrice;
-        auction.endTime = _endTime;
+        auction.name = params.name;
+        auction.auctionType = params.auctionType;
+        auction.tokenAddress = params.tokenAddress;
+        auction.startPrice = params.startPrice;
+        auction.currentPrice = params.startPrice;
+        auction.minBidIncrement = params.minBidIncrement;
+        auction.maxPrice = params.maxPrice;
+        auction.endTime = params.endTime;
         auction.createdAt = block.timestamp;
         auction.active = true;
-        auction.rewardToken = _rewardToken;
-        auction.rewardTokenId = _rewardTokenId;
-        auction.rewardAmount = _rewardAmount;
-        auction.isERC721 = _isERC721;
-        auction.isERC1155 = _isERC1155;
-        auction.numWinners = _numWinners;
-        auction.canCloseEarly = _canCloseEarly;
-        auction.isRWA = _isRWA;
-        auction.rwaTokenURI = _rwaTokenURI;
-        auction.dutchPriceDecrement = _dutchPriceDecrement;
-        auction.sealedBidRevealTime = _sealedBidRevealTime;
+        auction.rewardToken = params.rewardToken;
+        auction.rewardTokenId = params.rewardTokenId;
+        auction.rewardAmount = params.rewardAmount;
+        auction.isERC721 = params.isERC721;
+        auction.isERC1155 = params.isERC1155;
+        auction.numWinners = params.numWinners;
+        auction.canCloseEarly = params.canCloseEarly;
+        auction.isRWA = params.isRWA;
+        auction.rwaTokenURI = params.rwaTokenURI;
+        auction.dutchPriceDecrement = params.dutchPriceDecrement;
+        auction.sealedBidRevealTime = params.sealedBidRevealTime;
 
         if (msg.value > creationFee) {
             (bool sent, ) = payable(msg.sender).call{value: msg.value - creationFee}("");
             require(sent, "Refund failed");
         }
 
-        emit AuctionCreated(auctionId, msg.sender, _name, _auctionType, block.timestamp);
+        emit AuctionCreated(auctionId, msg.sender, params.name, params.auctionType, block.timestamp);
     }
 
+    // Остальные функции остаются без изменений, сокращаю для краткости
     function placeBid(uint256 _auctionId, bytes32 _sealedBid) external payable {
         Auction storage auction = auctions[_auctionId];
         require(auction.active, "Auction not active");
