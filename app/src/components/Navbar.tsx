@@ -53,9 +53,9 @@ export function Navbar() {
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
                 <span className="text-sm text-muted-foreground">Connected</span>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleDisconnect}
                 className="flex items-center gap-1"
               >
