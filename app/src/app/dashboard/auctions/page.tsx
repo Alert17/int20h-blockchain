@@ -448,22 +448,6 @@ export default function AuctionsPage() {
           )}
         </TabsContent>
       </Tabs>
-
-      <div className="mt-8">
-        <h2 className="mb-4 text-xl font-bold">Daily Rewards</h2>
-        <Card>
-          <CardHeader>
-            <CardTitle>Grab Daily Tokens</CardTitle>
-            <CardDescription>
-              Take your reward immediately with synthetic tokens after each task
-              completion
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full">Grab Daily Tokens</Button>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
