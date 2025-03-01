@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import DecentralizedAchievementsABI from '../contracts/DecentralizedAchievements.json';
+import NeverHoldABI from '../contracts/NeverHold.json';
 
 export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
@@ -8,9 +8,5 @@ export function getContract(signerOrProvider: ethers.Signer | ethers.Provider) {
     throw new Error('CONTRACT_ADDRESS is not set');
   }
 
-  return new ethers.Contract(
-    CONTRACT_ADDRESS,
-    DecentralizedAchievementsABI,
-    signerOrProvider
-  );
+  return new ethers.Contract(CONTRACT_ADDRESS, NeverHoldABI, signerOrProvider);
 }
