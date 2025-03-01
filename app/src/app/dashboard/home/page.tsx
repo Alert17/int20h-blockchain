@@ -55,7 +55,7 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold">My Dashboard</h1>
           <p className="text-muted-foreground">Manage your auctions and bids</p>
         </div>
-        <Link href="/dashboard/create-project">
+        <Link href="/dashboard/create-auction">
           <Button>
             Create Auction
             <ArrowUpRight className="ml-2 h-4 w-4" />
@@ -125,7 +125,7 @@ export default function HomePage() {
               You haven&apos;t created any auctions yet. Create your first
               auction to get started.
             </p>
-            <Link href="/dashboard/create-project">
+            <Link href="/dashboard/create-auction">
               <Button className="mt-4">Create Auction</Button>
             </Link>
           </div>

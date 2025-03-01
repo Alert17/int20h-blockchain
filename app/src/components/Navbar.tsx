@@ -20,14 +20,14 @@ export function Navbar() {
         {isConnected && (
           <div className="mx-4 hidden items-center gap-6 md:flex">
             <Link
-              href="/auctions"
+              href="/dashboard/auctions"
               className="flex items-center gap-2 text-sm font-medium hover:text-primary"
             >
               <Package className="h-4 w-4" />
               <span>Auctions</span>
             </Link>
             <Link
-              href="/my-bids"
+              href="/dashboard/home"
               className="flex items-center gap-2 text-sm font-medium hover:text-primary"
             >
               <History className="h-4 w-4" />
