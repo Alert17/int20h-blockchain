@@ -8,40 +8,44 @@ export default function Hero() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 text-center">
-      <div className="mb-8 text-3xl font-bold tracking-wider">
-        NEVERHOLD
-      </div>
-      
+    <div className="flex min-h-[80vh] flex-col items-center justify-center px-4 text-center">
+      <div className="mb-8 text-3xl font-bold tracking-wider">NEVERHOLD</div>
+
       <div className="mb-8">
-        <Gavel className="h-16 w-16 mx-auto text-primary" />
+        <Gavel className="mx-auto h-16 w-16 text-primary" />
       </div>
-      
-      <h1 className="text-4xl font-bold mb-2">
-        Decentralized Crypto Auctions
-      </h1>
-      
-      <p className="text-muted-foreground mb-8 max-w-md">
+
+      <h1 className="mb-2 text-4xl font-bold">Decentralized Crypto Auctions</h1>
+
+      <p className="mb-8 max-w-md text-muted-foreground">
         Buy, Sell, and Trade Digital Assets with Transparent Blockchain Fees
       </p>
-      
-      <div className={cn(
-        "transition-all duration-300",
-        isConnected ? "opacity-0 h-0" : "opacity-100 h-auto"
-      )}>
+
+      <div
+        className={cn(
+          'transition-all duration-300',
+          isConnected ? 'h-0 opacity-0' : 'h-auto opacity-100'
+        )}
+      >
         <WalletConnectButton />
       </div>
-      
+
       {isConnected && (
-        <div className="flex flex-col gap-4 animate-fade-in">
+        <div className="flex animate-fade-in flex-col gap-4">
           <div className="text-xl font-medium text-primary">
             Connected! Ready to start bidding?
           </div>
           <div className="flex gap-4">
-            <a href="/auctions" className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium">
+            <a
+              href="/dashboard/auctions"
+              className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary/90"
+            >
               Browse Auctions
             </a>
-            <a href="/create" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2 rounded-md font-medium">
+            <a
+              href="/dashboard/create-auction"
+              className="rounded-md bg-secondary px-4 py-2 font-medium text-secondary-foreground hover:bg-secondary/90"
+            >
               Create Auction
             </a>
           </div>
