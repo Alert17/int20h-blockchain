@@ -167,6 +167,16 @@ interface MockContract {
   endAuction: (auctionId: string) => Promise<{
     wait: () => Promise<{ status: number }>;
   }>;
+  // Додаємо нові методи для підтримки projects.ts
+  filters: {
+    ProjectCreated: (projectId: any, creator: string) => any;
+    SubmissionCreated: (projectId: any, submitter: any) => any;
+  };
+  queryFilter: (filter: any) => Promise<any[]>;
+  interface: {
+    parseLog: (log: any) => any;
+  };
+  projects: (id?: number) => Promise<any>;
 }
 
 // Створюємо мок-контракт
@@ -265,6 +275,53 @@ export function getMockContract(): MockContract {
           await new Promise((resolve) => setTimeout(resolve, 2000));
           return { status: 1 };
         },
+      };
+    },
+
+    // Мок для методу filters
+    filters: {
+      ProjectCreated: (projectId, creator) => {
+        return { projectId, creator };
+      },
+      SubmissionCreated: (projectId, submitter) => {
+        return { projectId, submitter };
+      },
+    },
+
+    // Мок для методу queryFilter
+    queryFilter: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      return []; // Повертаємо порожній масив логів
+    },
+
+    // Мок для інтерфейсу
+    interface: {
+      parseLog: () => {
+        return {
+          args: {
+            projectId: {
+              toNumber: () => 0,
+            },
+          },
+        };
+      },
+    },
+
+    // Мок для методу projects
+    projects: async (id) => {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      // Якщо id не передано, повертаємо кількість проектів
+      if (id === undefined) {
+        return BigInt(0); // Немає проектів
+      }
+
+      // Інакше повертаємо дані проекту
+      return {
+        creator: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8', // Адреса користувача
+        title: 'Mock Project',
+        description: 'This is a mock project',
+        submissionCount: 0,
       };
     },
   };
