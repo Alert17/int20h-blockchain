@@ -37,13 +37,13 @@ export default function Hero() {
           </div>
           <div className="flex gap-4">
             <a
-              href="/auctions"
+              href="/dashboard/auctions"
               className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground hover:bg-primary/90"
             >
               Browse Auctions
             </a>
             <a
-              href="/create"
+              href="/dashboard/create-auction"
               className="rounded-md bg-secondary px-4 py-2 font-medium text-secondary-foreground hover:bg-secondary/90"
             >
               Create Auction
