@@ -1,11 +1,11 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { BarChart3, Flag, Home, Trophy } from 'lucide-react';
+import { BarChart3, Home, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const sidebarItems = [
-  { name: 'Home', href: '/dashboard', icon: Home },
+  { name: 'Home', href: '/dashboard/home', icon: Home },
   { name: 'Auctions', href: '/dashboard/auctions', icon: Trophy },
   { name: 'Charts', href: '/dashboard/charts', icon: BarChart3 },
 ];
@@ -21,12 +21,6 @@ export default function DashboardLayout({
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <div className="w-64 border-r bg-background">
-        <div className="flex h-16 items-center border-b px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <Flag className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold tracking-wider">NEVERHOLD</span>
-          </Link>
-        </div>
         <nav className="space-y-1 p-4">
           {sidebarItems.map((item) => (
             <Link
