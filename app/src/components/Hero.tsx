@@ -22,7 +22,7 @@ export default function Hero() {
       </h1>
       
       <p className="text-muted-foreground mb-8 max-w-md">
-        Buy, Sell, and Trade Digital Assets with Zero Holding Fees
+        Buy, Sell, and Trade Digital Assets with Transparent Blockchain Fees
       </p>
       
       <div className={cn(
