@@ -131,22 +131,6 @@ export default function HomePage() {
           </div>
         )}
       </div>
-
-      <div className="mt-8">
-        <h2 className="mb-4 text-xl font-bold">Daily Rewards</h2>
-        <Card>
-          <CardHeader>
-            <CardTitle>Claim Daily Tokens</CardTitle>
-            <CardDescription>
-              Get your reward immediately with synthetic tokens after each task
-              completion
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full">Claim Daily Tokens</Button>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
