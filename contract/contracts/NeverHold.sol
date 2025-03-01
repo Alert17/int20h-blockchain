@@ -56,12 +56,17 @@ contract NeverHold is Ownable {
         _;
     }
 
-    constructor(address _rwaNFTAddress) Ownable(msg.sender) {
-        require(_rwaNFTAddress != address(0), "Invalid RWANFT address");
-        rwaNFTContract = RWANFT(_rwaNFTAddress);
+    constructor() Ownable(msg.sender) {
         creationFee = 0.01 ether;
         commissionPercent = 5;
         auctionIdCounter = 0;
+        rwaNFTContract = RWANFT(address(0));
+    }
+
+    function setRWANFTContract(address _rwaNFTAddress) external onlyOwner {
+        require(_rwaNFTAddress != address(0), "Invalid RWANFT address");
+        require(address(rwaNFTContract) == address(0), "RWANFT already set");
+        rwaNFTContract = RWANFT(_rwaNFTAddress);
     }
 
     function setCommission(uint256 _creationFee, uint256 _commissionPercent) external onlyOwner {
@@ -214,6 +219,7 @@ contract NeverHold is Ownable {
         Auction storage auction = auctions[_auctionId];
         require(auction.active, "Auction already ended");
         require(block.timestamp >= auction.endTime || auction.canCloseEarly, "Cannot end auction yet");
+        require(address(rwaNFTContract) != address(0), "RWANFT not set");
 
         auction.active = false;
         address[] memory winners = new address[](auction.numWinners);
@@ -245,16 +251,8 @@ contract NeverHold is Ownable {
             require(sellerSent, "Seller transfer failed");
 
             for (uint256 i = 0; i < winners.length && winners[i] != address(0); i++) {
-                if (auction.isRWA) {
-                    uint256 tokenId = rwaNFTContract.mintRWA(winners[i], _auctionId, auction.rwaTokenURI);
-                    emit RWANFTMinted(_auctionId, tokenId, winners[i]);
-                } else if (auction.isERC721 && i == 0) {
-                    IERC721(auction.rewardToken).safeTransferFrom(auction.seller, winners[i], auction.rewardTokenId);
-                } else if (auction.isERC1155 && i == 0) {
-                    IERC1155(auction.rewardToken).safeTransferFrom(auction.seller, winners[i], auction.rewardTokenId, auction.rewardAmount, "");
-                } else if (auction.rewardToken != address(0) && i == 0) {
-                    IERC20(auction.rewardToken).transferFrom(auction.seller, winners[i], auction.rewardAmount);
-                }
+                uint256 tokenId = rwaNFTContract.mintRWA(winners[i], _auctionId, auction.rwaTokenURI);
+                emit RWANFTMinted(_auctionId, tokenId, winners[i]);
             }
 
             if (auction.auctionType != AuctionType.CHARITY) {
