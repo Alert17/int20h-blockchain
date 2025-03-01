@@ -1,75 +1,52 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import WalletConnectButton from './WalletConnectButton';
-import Link from 'next/link';
-
-const CarouselItems = [
-  'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp',
-  'https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp',
-  'https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp',
-];
-
-const gradients = [
-  'bg-gradient-to-r from-blue-500 to-purple-500',
-  'bg-gradient-to-r from-red-500 to-orange-500',
-  'bg-gradient-to-r from-green-500 to-teal-500',
-];
+import { Gavel } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function Hero() {
-  const [current, setCurrent] = useState(0);
-  const [opacity, setOpacity] = useState(1);
   const { isConnected } = useAccount();
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     // Fade out the current image
-  //     setOpacity(0);
-  //     // After the fade-out, update the image and fade back in
-  //     setTimeout(() => {
-  //       setCurrent((prev) => (prev + 1) % CarouselItems.length);
-  //       setOpacity(1);
-  //     }, 1000);
-  //   }, 10_000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-
   return (
-    <div className="z-0 flex h-[600px] w-full flex-row justify-between gap-10 p-2">
-      <div className="flex w-1/2 flex-col items-start justify-center py-10 pr-10">
-        <h1 className="mb-5 text-6xl font-bold">Learn. Compete. Earn. Win</h1>
-        <div className="flex gap-5">
-          {isConnected ? (
-            <>
-              <Link
-                href="/dashboard/create-project"
-                className="btn btn-primary"
-              >
-                Create Project
-              </Link>
-              <Link href="/dashboard" className="btn btn-secondary">
-                Submit Work
-              </Link>
-            </>
-          ) : (
-            <WalletConnectButton />
-          )}
+    <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 text-center">
+      <div className="mb-8 text-3xl font-bold tracking-wider">
+        NEVERHOLD
+      </div>
+      
+      <div className="mb-8">
+        <Gavel className="h-16 w-16 mx-auto text-primary" />
+      </div>
+      
+      <h1 className="text-4xl font-bold mb-2">
+        Decentralized Crypto Auctions
+      </h1>
+      
+      <p className="text-muted-foreground mb-8 max-w-md">
+        Buy, Sell, and Trade Digital Assets with Zero Holding Fees
+      </p>
+      
+      <div className={cn(
+        "transition-all duration-300",
+        isConnected ? "opacity-0 h-0" : "opacity-100 h-auto"
+      )}>
+        <WalletConnectButton />
+      </div>
+      
+      {isConnected && (
+        <div className="flex flex-col gap-4 animate-fade-in">
+          <div className="text-xl font-medium text-primary">
+            Connected! Ready to start bidding?
+          </div>
+          <div className="flex gap-4">
+            <a href="/auctions" className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md font-medium">
+              Browse Auctions
+            </a>
+            <a href="/create" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2 rounded-md font-medium">
+              Create Auction
+            </a>
+          </div>
         </div>
-      </div>
-
-      <div className="relative flex w-1/2 items-center justify-center">
-        <div
-          className={`${gradients[current]} absolute inset-0 rounded-lg transition-all duration-500`}
-          style={{ animation: 'gradientFlow 0.5s ease-in-out forwards' }}
-        ></div>
-        <img
-          src={CarouselItems[current]}
-          alt="Carousel"
-          className="relative z-10 max-h-[80%] max-w-[80%] rounded-lg object-contain"
-          style={{ opacity, transition: 'opacity 0.5s ease-in-out' }}
-        />
-      </div>
+      )}
     </div>
   );
 }
